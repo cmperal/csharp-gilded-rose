@@ -16,78 +16,85 @@ namespace csharp
 
         public void UpdateQuality()
         {
-            for (var i = 0; i < Items.Count; i++)
+            foreach (var item in Items)
             {
-                if (Items[i].Name != agedBried && Items[i].Name != backstageTAFKAL80ETC)
+                updateItem(item);
+            }
+        }
+
+        private void updateItem(Item item)
+        {
+            if (item.Name == sulfuras)
+                return;
+
+            if (item != null)
+            {
+                if (item.Name != agedBried && item.Name != backstageTAFKAL80ETC)
                 {
-                    if (Items[i].Quality > 0)
+                    if (item.Quality > 0)
                     {
-                        if (Items[i].Name != sulfuras)
-                        {
-                            Items[i].Quality = Items[i].Quality - 1;
-                        }
+                        item.Quality = addQuality(item.Quality, -1);
                     }
                 }
                 else
                 {
-                    if (Items[i].Quality < 50)
+                    if (item.Quality < 50)
                     {
-                        Items[i].Quality = Items[i].Quality + 1;
+                        item.Quality = addQuality(item.Quality, 1);
 
-                        if (Items[i].Name == backstageTAFKAL80ETC)
+                        if (item.Name == backstageTAFKAL80ETC)
                         {
-                            if (Items[i].SellIn < 11)
+                            if (item.SellIn < 11)
                             {
-                                if (Items[i].Quality < 50)
+                                if (item.Quality < 50)
                                 {
-                                    Items[i].Quality = Items[i].Quality + 1;
+                                    item.Quality = addQuality(item.Quality, 1);
                                 }
                             }
 
-                            if (Items[i].SellIn < 6)
+                            if (item.SellIn < 6)
                             {
-                                if (Items[i].Quality < 50)
+                                if (item.Quality < 50)
                                 {
-                                    Items[i].Quality = Items[i].Quality + 1;
+                                    item.Quality = addQuality(item.Quality, 1);
                                 }
                             }
-                        }
-                    }
-                }
-
-                if (Items[i].Name != sulfuras)
-                {
-                    Items[i].SellIn = Items[i].SellIn - 1;
-                }
-
-                if (Items[i].SellIn < 0)
-                {
-                    if (Items[i].Name != agedBried)
-                    {
-                        if (Items[i].Name != backstageTAFKAL80ETC)
-                        {
-                            if (Items[i].Quality > 0)
-                            {
-                                if (Items[i].Name != sulfuras)
-                                {
-                                    Items[i].Quality = Items[i].Quality - 1;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Items[i].Quality = Items[i].Quality - Items[i].Quality;
-                        }
-                    }
-                    else
-                    {
-                        if (Items[i].Quality < 50)
-                        {
-                            Items[i].Quality = Items[i].Quality + 1;
                         }
                     }
                 }
             }
+
+            item.SellIn = item.SellIn - 1;
+
+            if (item.SellIn < 0)
+            {
+                if (item.Name != agedBried)
+                {
+                    if (item.Name != backstageTAFKAL80ETC)
+                    {
+                        if (item.Quality > 0)
+                        {
+                            item.Quality = item.Quality - 1;
+                        }
+                    }
+                    else
+                    {
+                        item.Quality = item.Quality - item.Quality;
+                    }
+                }
+                else
+                {
+                    if (item.Quality < 50)
+                    {
+                        item.Quality = item.Quality + 1;
+                    }
+                }
+            }
+        }
+
+        private int addQuality(int currentQuality, int amount)
+        {
+            return currentQuality += amount;
         }
     }
 }
