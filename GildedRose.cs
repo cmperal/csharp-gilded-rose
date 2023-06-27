@@ -4,6 +4,10 @@ namespace csharp
 {
     public class GildedRose
     {
+        readonly string agedBried = "Aged Brie";
+        readonly string backstageTAFKAL80ETC = "Backstage passes to a TAFKAL80ETC concert";
+        readonly string sulfuras = "Sulfuras, Hand of Ragnaros";
+
         IList<Item> Items;
         public GildedRose(IList<Item> Items)
         {
@@ -14,11 +18,11 @@ namespace csharp
         {
             for (var i = 0; i < Items.Count; i++)
             {
-                if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
+                if (Items[i].Name != agedBried && Items[i].Name != backstageTAFKAL80ETC)
                 {
                     if (Items[i].Quality > 0)
                     {
-                        if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
+                        if (Items[i].Name != sulfuras)
                         {
                             Items[i].Quality = Items[i].Quality - 1;
                         }
@@ -30,7 +34,7 @@ namespace csharp
                     {
                         Items[i].Quality = Items[i].Quality + 1;
 
-                        if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
+                        if (Items[i].Name == backstageTAFKAL80ETC)
                         {
                             if (Items[i].SellIn < 11)
                             {
@@ -51,20 +55,20 @@ namespace csharp
                     }
                 }
 
-                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
+                if (Items[i].Name != sulfuras)
                 {
                     Items[i].SellIn = Items[i].SellIn - 1;
                 }
 
                 if (Items[i].SellIn < 0)
                 {
-                    if (Items[i].Name != "Aged Brie")
+                    if (Items[i].Name != agedBried)
                     {
-                        if (Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
+                        if (Items[i].Name != backstageTAFKAL80ETC)
                         {
                             if (Items[i].Quality > 0)
                             {
-                                if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
+                                if (Items[i].Name != sulfuras)
                                 {
                                     Items[i].Quality = Items[i].Quality - 1;
                                 }
