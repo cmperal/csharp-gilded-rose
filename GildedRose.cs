@@ -27,37 +27,34 @@ namespace csharp
             if (item.Name == sulfuras)
                 return;
 
-            if (item != null)
+            if (item.Name != agedBried && item.Name != backstageTAFKAL80ETC)
             {
-                if (item.Name != agedBried && item.Name != backstageTAFKAL80ETC)
+                if (item.Quality > 0)
                 {
-                    if (item.Quality > 0)
-                    {
-                        item.Quality = addQuality(item.Quality, -1);
-                    }
+                    item.Quality = addQuality(item.Quality, -1);
                 }
-                else
+            }
+            else
+            {
+                if (item.Quality < 50)
                 {
-                    if (item.Quality < 50)
+                    item.Quality = addQuality(item.Quality, 1);
+
+                    if (item.Name == backstageTAFKAL80ETC)
                     {
-                        item.Quality = addQuality(item.Quality, 1);
-
-                        if (item.Name == backstageTAFKAL80ETC)
+                        if (item.SellIn < 11)
                         {
-                            if (item.SellIn < 11)
+                            if (item.Quality < 50)
                             {
-                                if (item.Quality < 50)
-                                {
-                                    item.Quality = addQuality(item.Quality, 1);
-                                }
+                                item.Quality = addQuality(item.Quality, 1);
                             }
+                        }
 
-                            if (item.SellIn < 6)
+                        if (item.SellIn < 6)
+                        {
+                            if (item.Quality < 50)
                             {
-                                if (item.Quality < 50)
-                                {
-                                    item.Quality = addQuality(item.Quality, 1);
-                                }
+                                item.Quality = addQuality(item.Quality, 1);
                             }
                         }
                     }
