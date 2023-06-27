@@ -7,6 +7,9 @@ namespace csharp
         readonly string agedBried = "Aged Brie";
         readonly string backstageTAFKAL80ETC = "Backstage passes to a TAFKAL80ETC concert";
         readonly string sulfuras = "Sulfuras, Hand of Ragnaros";
+        readonly string conjured = "Conjured Mana Cake";
+        readonly int maxQuality = 50;
+        readonly int minQuality = 0;        
 
         IList<Item> Items;
         public GildedRose(IList<Item> Items)
@@ -24,74 +27,90 @@ namespace csharp
 
         private void updateItem(Item item)
         {
+            item.SellIn--;
+
             if (item.Name == sulfuras)
                 return;
 
-            if (item.Name != agedBried && item.Name != backstageTAFKAL80ETC)
+            if (item.Name == backstageTAFKAL80ETC)
             {
-                if (item.Quality > 0)
-                {
-                    item.Quality = addQuality(item.Quality, -1);
-                }
-            }
-            else
-            {
-                if (item.Quality < 50)
-                {
-                    item.Quality = addQuality(item.Quality, 1);
-
-                    if (item.Name == backstageTAFKAL80ETC)
-                    {
-                        if (item.SellIn < 11)
-                        {
-                            if (item.Quality < 50)
-                            {
-                                item.Quality = addQuality(item.Quality, 1);
-                            }
-                        }
-
-                        if (item.SellIn < 6)
-                        {
-                            if (item.Quality < 50)
-                            {
-                                item.Quality = addQuality(item.Quality, 1);
-                            }
-                        }
-                    }
-                }
+                updateBackStageQuality(item);
+                return;
             }
 
-            item.SellIn = item.SellIn - 1;
-
-            if (item.SellIn < 0)
+            if (item.Name == agedBried)
             {
-                if (item.Name != agedBried)
-                {
-                    if (item.Name != backstageTAFKAL80ETC)
-                    {
-                        if (item.Quality > 0)
-                        {
-                            item.Quality = item.Quality - 1;
-                        }
-                    }
-                    else
-                    {
-                        item.Quality = item.Quality - item.Quality;
-                    }
-                }
-                else
-                {
-                    if (item.Quality < 50)
-                    {
-                        item.Quality = item.Quality + 1;
-                    }
-                }
+                updateAgedBriedQuality(item);
+                return;
             }
+
+            if (item.Name == conjured) 
+            {
+                updateConjuredQuality(item);
+                return;
+            }
+
+            updateOtherProductQuality(item);
         }
 
-        private int addQuality(int currentQuality, int amount)
+        private void updateBackStageQuality(Item item)
         {
-            return currentQuality += amount;
+            if (isExpired(item.SellIn))
+            {
+                item.Quality = 0;
+                return;
+            }
+
+            var resultingQuality = (item.SellIn < 5 ? item.Quality += 3 :
+                item.SellIn < 11 ? item.Quality += 2 :
+                item.Quality);
+
+
+            item.Quality = getMaxQuality(resultingQuality);
+            
+        }
+
+        private void updateAgedBriedQuality(Item item)
+        {
+            if (isExpired(item.SellIn) && item.Quality < maxQuality)
+            {
+                item.Quality+=2;
+                return;
+            }
+
+            item.Quality = getMaxQuality(item.Quality); 
+        }
+
+        private void updateOtherProductQuality(Item item) 
+        {
+            item.Quality--;
+
+            if (isExpired(item.SellIn))
+                item.Quality--;
+
+            item.Quality = getMinQuality(item.Quality);
+        }
+
+        private void updateConjuredQuality(Item item) 
+        {
+            item.Quality -= 2;
+
+            item.Quality = getMinQuality(item.Quality);
+        }
+
+        private int getMaxQuality(int quality)
+        {
+            return quality > maxQuality ? maxQuality : quality;
+        }
+
+        private int getMinQuality(int quality) 
+        {
+            return quality < minQuality ? minQuality : quality;
+        }
+
+        private bool isExpired(int sellIn)
+        {
+            return (sellIn < 0);
         }
     }
 }
